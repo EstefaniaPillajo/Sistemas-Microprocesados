@@ -1,0 +1,49 @@
+//PillajoEstefania
+//Deber1
+//Realice un programa que ingrese una palabra por comunicación serial
+//y genere una rotación de caracteres en la LCD.
+
+#include <MsTimer2.h>
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(13, 12, A0, A1, A2, A3);
+
+String dato ;
+String frase;
+int numero = 0;
+
+void setup() {
+  lcd.blink();
+  Serial.begin(9600);
+}
+void loop() {
+  if (Serial.available() > 0) {
+    dato = Serial.readString();
+    lcd.setCursor(0, 0);
+    lcd.print("                ");
+    lcd.setCursor(0, 0);
+    for (i = 0; i < dato.length() - 1; i++) {
+      frase = frase + dato.substring(i, i + 1);
+    }
+    lcd.print(frase);
+    delay(2000);
+    for (i = 0; i < frase.length(); i++) {
+      lcd.scrollDisplayLeft();
+      delay(750);
+    }
+    for (i = 0; i < 16 + frase.length(); i++) {
+      lcd.scrollDisplayRight();
+      delay(750);
+    }
+    for (i = 0; i < 16; i++) {
+      lcd.scrollDisplayLeft();
+      delay(750);
+    }
+
+  }
+  lcd.setCursor(0, 0);
+  lcd.print("Ingresar frase");
+  dato = "      ";
+  frase = "      ";
+  lcd.print("                ");
+  lcd.setCursor(0, 0);
+}
