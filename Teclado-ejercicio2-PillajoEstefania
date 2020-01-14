@@ -1,0 +1,96 @@
+//Pillajo Estefania
+//Deber2
+//Realizar un programa que mediante teclado matricial (consultar)
+//ingrese el tiempo en segundos de una cuenta regresiva.
+//Esta cuenta, decrece cada 1 segundo mediante timer.
+
+#include <MsTimer2.h>
+#include <LiquidCrystal.h>
+#include <Keypad.h>  
+char tecla;
+String dato ;
+int numero = 0;
+int a = 0;
+LiquidCrystal lcd(11, 10, A0, A1, A2, A3); 
+
+//CONSULTA
+   
+const byte fila = 4;    
+const byte columna = 4;    
+char keys[fila][columna] = {    
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+};
+byte pinFila[fila] = {13, 12, 9, 8}; 
+byte pinColumna[columna] = {7, 6, 5, 4}; 
+Keypad teclado = Keypad(makeKeymap(keys), pinFila, pinColumna, fila, columna);  
+
+
+void setup() {
+  MsTimer2::set(1000, leer);
+  MsTimer2::start();
+  lcd.begin(16, 2);
+  lcd.print("Ingresar un numero");
+  lcd.setCursor(0, 1);
+}
+
+void loop() {
+  tecla = teclado.getKey();
+  if (tecla) {
+    if (tecla == 'A' || tecla == 'C' || tecla == 'D' || tecla == '#' || tecla == '*') {
+      a = 1 - a;
+      lcd.setCursor(0, 0);
+      lcd.print("                ");
+      lcd.setCursor(7, 1);
+      lcd.print("       ");
+      lcd.setCursor(0, 0);
+      lcd.print("Conteo regresivo");
+    }
+    else if (tecla == 'B') {
+      lcd.setCursor(0, 0);
+      lcd.print("                ");
+      lcd.setCursor(0, 0);
+      lcd.print("Reiniciar");
+      delay(2000);
+      lcd.setCursor(0, 0);
+      lcd.print("                ");
+      lcd.setCursor(0, 1);
+      lcd.print("                ");
+      lcd.setCursor(0, 0);
+      lcd.print("Ingresar un numero");
+      lcd.setCursor(0, 1);
+      tecla = ' ';
+      dato = " ";
+      a = 0;
+      numero = 0;
+    }
+    else {
+      lcd.print(tecla);
+      dato = dato + tecla;
+    }
+    numero = dato.toInt();
+  }
+}
+void leer() {
+  if (a == 1 ) {
+    if (numero > 0) {
+      lcd.setCursor(7, 1);
+      lcd.print("      ");
+      lcd.setCursor(7, 1);
+      lcd.print(numero);
+      numero--;
+    }
+    else if (numero == 0) {
+      lcd.setCursor(7, 1);
+      lcd.print("    ");
+      lcd.setCursor(7, 1);
+      lcd.print(numero);
+      lcd.setCursor(0, 0);
+      lcd.print("                ");
+      lcd.setCursor(0, 0);
+      lcd.print("Conteo finalizado");
+    }
+  }
+}
